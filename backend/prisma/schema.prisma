@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  email           String       @unique
+  passwordHash    String
+  role            String
+
+  // Student specific
+  university      String?
+  course          String?
+  graduationYear  Int?
+
+  // Alumni specific
+  company         String?
+  designation     String?
+  experienceYears Int?
+  isVerified      Boolean      @default(false)
+
+  // Relationships
+  jobs            Job[]
+  posts           Post[]
+  applications    Application[]
+  mentorshipsAsStudent Mentorship[] @relation("StudentRequests")
+  mentorshipsAsAlumni  Mentorship[] @relation("AlumniRequests")
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @default(now())
+}
+
+model Job {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  description     String
+  deadline        DateTime
+  status          String       @default("Open")
+  createdAt       DateTime     @default(now())
+  
+  alumniId        String       @db.ObjectId
+  alumni          User         @relation(fields: [alumniId], references: [id])
+  
+  applications    Application[]
+}
+
+model Application {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  status          String       @default("Applied")
+  appliedAt       DateTime     @default(now())
+  
+  studentId       String       @db.ObjectId
+  student         User         @relation(fields: [studentId], references: [id])
+  
+  jobId           String       @db.ObjectId
+  job             Job          @relation(fields: [jobId], references: [id])
+
+  referral        Referral?
+}
+
+model Referral {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  status          String       @default("Requested")
+  decisionDate    DateTime?
+  
+  applicationId   String       @unique @db.ObjectId
+  application     Application  @relation(fields: [applicationId], references: [id])
+}
+
+model Post {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  content         String
+  likes           Int          @default(0)
+  likedBy         String[]     @default([])
+  createdAt       DateTime     @default(now())
+  
+  authorId        String       @db.ObjectId
+  author          User         @relation(fields: [authorId], references: [id])
+}
+
+model Mentorship {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  message         String
+  status          String       @default("Pending") // Pending, Accepted, Rejected
+  createdAt       DateTime     @default(now())
+  
+  studentId       String       @db.ObjectId
+  student         User         @relation("StudentRequests", fields: [studentId], references: [id])
+  
+  alumniId        String       @db.ObjectId
+  alumni          User         @relation("AlumniRequests", fields: [alumniId], references: [id])
+}
