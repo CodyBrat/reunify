@@ -1,0 +1,300 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap');
+
+/* ============================================================
+   BAUHAUS DESIGN TOKENS
+   ============================================================ */
+:root {
+  /* Colors */
+  --bg-color:       #F0F0F0;  /* off-white canvas */
+  --foreground:     #121212;  /* stark black */
+  --primary-red:    #D02020;
+  --primary-blue:   #1040C0;
+  --primary-yellow: #F0C020;
+  --muted:          #E0E0E0;
+  --border-color:   #121212;
+
+  /* Legacy alias shims — keeps older inline styles working */
+  --surface:        #ffffff;
+  --surface-border: #121212;
+  --accent:         #1040C0;
+  --accent-glow:    rgba(16, 64, 192, 0.15);
+  --text-main:      #121212;
+  --text-muted:     #555555;
+  --success:        #1040C0;
+
+  /* Geometry */
+  --radius:         0px;         /* Bauhaus — no rounding */
+  --border-width:   2px;
+  --border-thick:   4px;
+  --shadow-sm:      4px 4px 0px 0px #121212;
+  --shadow-md:      6px 6px 0px 0px #121212;
+  --shadow-lg:      8px 8px 0px 0px #121212;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Outfit', sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--foreground);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Remove the old dark glow — Bauhaus uses no glows */
+body::before { display: none; }
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+#main-content {
+  min-height: 100vh;
+  padding-bottom: 5rem;
+}
+
+.with-sidebar {
+  margin-left: 280px;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  text-decoration: none;
+  border-radius: 0;              /* Bauhaus — square corners */
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 200ms ease-out,
+    box-shadow 200ms ease-out,
+    background 200ms ease-out;
+  position: relative;
+}
+
+/* Press-down effect */
+.btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+/* Primary — Red */
+.btn-primary {
+  background: var(--primary-red);
+  color: #ffffff;
+  border-color: var(--border-color);
+}
+.btn-primary:hover {
+  background: #b81a1a;
+}
+
+/* Secondary / Blue */
+.btn-secondary {
+  background: var(--primary-blue);
+  color: #ffffff;
+  border-color: var(--border-color);
+}
+.btn-secondary:hover {
+  background: #0d34a0;
+}
+
+/* Yellow */
+.btn-yellow {
+  background: var(--primary-yellow);
+  color: var(--foreground);
+  border-color: var(--border-color);
+}
+.btn-yellow:hover {
+  background: #d9ac18;
+}
+
+/* Outline / Ghost */
+.btn-outline {
+  background: #ffffff;
+  color: var(--foreground);
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+.btn-outline:hover {
+  background: var(--muted);
+}
+
+/* Disabled state */
+.btn:disabled,
+.btn[disabled] {
+  background: var(--muted);
+  color: #888;
+  box-shadow: none;
+  cursor: default;
+  transform: none;
+  border-color: #aaa;
+}
+
+/* Pill variant (use sparingly) */
+.btn-pill {
+  border-radius: 9999px;
+}
+
+/* ============================================================
+   CARDS  (replaces .glass-card)
+   ============================================================ */
+.glass-card {
+  background: #ffffff;
+  border: var(--border-thick) solid var(--border-color);
+  box-shadow: var(--shadow-lg);
+  border-radius: 0;
+  padding: 2rem;
+  position: relative;
+  transition: transform 200ms ease-out;
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Corner accent dot — small geometric decoration */
+.glass-card::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 10px;
+  height: 10px;
+  background: var(--primary-yellow);
+  border: 2px solid var(--border-color);
+  border-radius: 0;
+}
+
+/* ============================================================
+   BAUHAUS CARD ACCENTS (rotate every 3rd) 
+   ============================================================ */
+.glass-card:nth-child(3n+1)::after { background: var(--primary-red); }
+.glass-card:nth-child(3n+2)::after { background: var(--primary-blue); }
+.glass-card:nth-child(3n+3)::after { background: var(--primary-yellow); }
+
+/* ============================================================
+   TYPOGRAPHY UTILITIES
+   ============================================================ */
+
+/* Replaces the old gradient text — Bauhaus uses solid accent */
+.text-gradient {
+  color: var(--primary-blue);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+/* Display headline */
+.heading-display {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  color: var(--foreground);
+}
+
+/* Section heading */
+.heading-section {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--foreground);
+}
+
+/* Small label */
+.label-caps {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   FORM INPUTS
+   ============================================================ */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+textarea,
+select {
+  background: #ffffff;
+  color: var(--foreground);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 0;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-family: 'Outfit', sans-serif;
+  width: 100%;
+  outline: none;
+  transition: box-shadow 200ms ease-out;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  box-shadow: var(--shadow-sm);
+  border-color: var(--primary-blue);
+}
+
+/* ============================================================
+   BAUHAUS SECTION DIVIDER
+   ============================================================ */
+.section-divider {
+  border: none;
+  border-top: var(--border-thick) solid var(--border-color);
+  margin: 0;
+}
+
+/* ============================================================
+   COLOR BLOCK HELPERS (background utility classes)
+   ============================================================ */
+.bg-bauhaus-red    { background: var(--primary-red); color: #fff; }
+.bg-bauhaus-blue   { background: var(--primary-blue); color: #fff; }
+.bg-bauhaus-yellow { background: var(--primary-yellow); color: var(--foreground); }
+.bg-bauhaus-dark   { background: var(--foreground); color: #fff; }
+.bg-bauhaus-canvas { background: var(--bg-color); color: var(--foreground); }
+
+/* ============================================================
+   HARD-SHADOW UTILITIES
+   ============================================================ */
+.shadow-bauhaus-sm { box-shadow: var(--shadow-sm); }
+.shadow-bauhaus-md { box-shadow: var(--shadow-md); }
+.shadow-bauhaus-lg { box-shadow: var(--shadow-lg); }
+
+/* ============================================================
+   ANIMATION — mechanical, snappy
+   ============================================================ */
+.animate-fade-in {
+  animation: fadeIn 300ms ease-out forwards;
+  opacity: 0;
+}
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
