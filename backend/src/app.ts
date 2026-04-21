@@ -16,42 +16,56 @@ export function createApp(
 ): Express {
     const app = express();
 
-    // Middleware
     app.use(cors());
-    app.use(bodyParser.json());
+    app.use(bodyParser.json({ limit: '5mb' })); // larger limit for base64 resume if needed
 
-    // Health Check
+    // Health
     app.get('/api/health', (req, res) => res.json({ status: 'healthy', database: 'connected' }));
-
-    // Routes
 
     // Auth
     app.post('/api/auth/register/student', authController.registerStudent);
     app.post('/api/auth/register/alumni', authController.registerAlumni);
     app.post('/api/auth/login', authController.login);
+    app.get('/api/mentors/:id', mentorshipController.getMentorDetails);
 
     // Jobs
     app.post('/api/jobs', jobController.postJob);
     app.get('/api/jobs', jobController.getOpenJobs);
     app.get('/api/jobs/alumni/:alumniId', jobController.getAlumniJobs);
 
-    // Applications / Referrals
+    // Applications
     app.post('/api/applications', applicationController.applyForJob);
     app.get('/api/applications/alumni/:alumniId', applicationController.getAlumniApplications);
     app.get('/api/applications/student/:studentId', applicationController.getStudentApplications);
-    app.put('/api/referrals/:referralId/approve', applicationController.approveReferral);
+
+    // Referral lifecycle
+    app.put('/api/referrals/:referralId/approve',          applicationController.approveReferral);
+    app.patch('/api/referrals/:referralId/enrich',         applicationController.enrichReferral);
+    app.patch('/api/referrals/:referralId/under-review',   applicationController.markUnderReview);
+    app.patch('/api/referrals/:referralId/decline',        applicationController.declineReferral);
+    app.patch('/api/referrals/:referralId/request-changes',applicationController.requestChanges);
+    app.patch('/api/referrals/:referralId/student-status', applicationController.updateStudentStatus);
 
     // Posts
     app.post('/api/posts', postController.createPost);
     app.get('/api/posts', postController.getPosts);
     app.put('/api/posts/:postId/like', postController.likePost);
 
-    // Mentorship
-    app.post('/api/mentorships', mentorshipController.requestMentorship);
-    app.get('/api/mentorships/mentors', mentorshipController.getAllMentors);
-    app.get('/api/mentorships/student/:studentId', mentorshipController.getStudentMentorships);
-    app.get('/api/mentorships/alumni/:alumniId', mentorshipController.getAlumniMentorships);
-    app.put('/api/mentorships/:mentorshipId/status', mentorshipController.updateStatus);
+    // Mentorship & Office Hours
+    app.get('/api/mentorships/mentors',              mentorshipController.getAllMentors); // This will need updating in controller if kept
+    app.get('/api/mentorships/office-hours/:alumniId', mentorshipController.getOfficeHours);
+    app.patch('/api/mentorships/office-hours/:alumniId', mentorshipController.updateOfficeHours);
+    app.get('/api/mentorships/available/:alumniId',     mentorshipController.getAvailableSlots);
+    app.post('/api/mentorships/book',                  mentorshipController.bookSession);
+    app.get('/api/mentorships/student/:studentId',      mentorshipController.getStudentSessions);
+    app.get('/api/mentorships/alumni/:alumniId',        mentorshipController.getAlumniSessions);
+    app.get('/api/mentorships/sessions/:sessionId',     mentorshipController.getSessionDetails);
+    app.patch('/api/mentorships/sessions/:sessionId/link', mentorshipController.updateMeetingLink);
+    app.post('/api/mentorships/sessions/:sessionId/feedback', mentorshipController.submitFeedback);
+
+    // Notifications
+    app.get('/api/notifications/:userId',         mentorshipController.getNotifications);
+    app.patch('/api/notifications/:id/read',       mentorshipController.markNotificationRead);
 
     return app;
 }

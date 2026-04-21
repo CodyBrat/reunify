@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider  = "mongodb"
+  url       = env("DATABASE_URL")
 }
 
 model User {
@@ -29,8 +29,11 @@ model User {
   jobs            Job[]
   posts           Post[]
   applications    Application[]
-  mentorshipsAsStudent Mentorship[] @relation("StudentRequests")
-  mentorshipsAsAlumni  Mentorship[] @relation("AlumniRequests")
+  mentorshipsAsStudent MentorshipSession[] @relation("StudentSessions", fields: [mentorshipSessionIds], references: [id])
+  mentorshipSessionIds String[]          @db.ObjectId
+  mentorshipsAsAlumni  MentorshipSession[] @relation("AlumniSessions")
+  officeHours         OfficeHours?
+  notifications       Notification[]
 
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @default(now())
@@ -65,12 +68,33 @@ model Application {
 }
 
 model Referral {
-  id              String       @id @default(auto()) @map("_id") @db.ObjectId
-  status          String       @default("Requested")
-  decisionDate    DateTime?
-  
+  id                    String    @id @default(auto()) @map("_id") @db.ObjectId
+  // Core status — extended enum
+  status                String    @default("Pending")
+  decisionDate          DateTime?
+
+  // Student-provided context (multi-step form)
+  whyThisRole           String?
+  relevantSkills        String[]  @default([])
+  expectedSalary        String?
+  applicationTimeline   String?
+  studentQuestions      String?
+
+  // Alumni response
+  declineReason         String?
+  changesRequested      String?
+
+  // Outcome timestamps
+  approvedAt            DateTime?
+  submittedToCompanyAt  DateTime?
+  interviewScheduledAt  DateTime?
+  offerReceivedAt       DateTime?
+
   applicationId   String       @unique @db.ObjectId
   application     Application  @relation(fields: [applicationId], references: [id])
+
+  createdAt       DateTime?
+  updatedAt       DateTime?
 }
 
 model Post {
@@ -85,15 +109,68 @@ model Post {
   author          User         @relation(fields: [authorId], references: [id])
 }
 
-model Mentorship {
+model OfficeHours {
   id              String       @id @default(auto()) @map("_id") @db.ObjectId
-  message         String
-  status          String       @default("Pending") // Pending, Accepted, Rejected
-  createdAt       DateTime     @default(now())
+  alumniId        String       @unique @db.ObjectId
+  alumni          User         @relation(fields: [alumniId], references: [id])
   
-  studentId       String       @db.ObjectId
-  student         User         @relation("StudentRequests", fields: [studentId], references: [id])
+  enabled         Boolean      @default(false)
+  timezone        String       @default("UTC")
+  
+  // Weekly recurring schedule
+  weeklySchedule  Json?        // Array of { day, slots: [{ startTime, duration, type, maxStudents }] }
+  blackoutDates   DateTime[]   @default([])
+  
+  preferences     Json?        // { maxSessionsPerWeek, minAdvanceBooking, expertiseAreas }
+  
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @default(now())
+}
+
+model MentorshipSession {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
   
   alumniId        String       @db.ObjectId
-  alumni          User         @relation("AlumniRequests", fields: [alumniId], references: [id])
+  alumni          User         @relation("AlumniSessions", fields: [alumniId], references: [id])
+  
+  studentIds      String[]     @db.ObjectId
+  students        User[]       @relation("StudentSessions", fields: [studentIds], references: [id])
+  
+  status          String       @default("SCHEDULED") // SCHEDULED, COMPLETED, CANCELLED, NO_SHOW
+  type            String       @default("1-on-1")    // 1-on-1, Group, Drop-in
+  
+  scheduledAt     DateTime
+  duration        Int          // in minutes
+  meetingLink     String?
+  
+  // Pre-session
+  message         String?      // Legacy request message or general context
+  topics          String[]     @default([])
+  questions       Json?        // Array of { studentId, questions: string[] }
+  materials       Json?        // Array of { studentId, resumeUrl, portfolioUrl }
+  
+  // Post-session
+  sessionNotes    String?
+  actionItems     Json?        // Array of { studentId, tasks: string[] }
+  feedback        Json?        // Array of { studentId, rating, takeaways, wouldBookAgain }
+  alumniSummary   String?
+  
+  followUpNeeded  Boolean      @default(false)
+  
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @default(now())
+}
+
+model Notification {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String       @db.ObjectId
+  user            User         @relation(fields: [userId], references: [id])
+  
+  title           String
+  message         String
+  type            String       // INFO, MENTORSHIP_BOOKED, SESSION_REMINDER, etc.
+  link            String?      // Optional UI link
+  isRead          Boolean      @default(false)
+  
+  createdAt       DateTime     @default(now())
 }
