@@ -65,7 +65,7 @@ Frontend->>ApplicationController: PUT /referral/approve
 activate ApplicationController
 ApplicationController->>ReferralService: approveReferral(referralId)
 activate ReferralService
-ReferralService->>ReferralRepository: Update status to "Referred"
+ReferralService->>ReferralRepository: Update status to "Approved"
 activate ReferralRepository
 ReferralRepository->>Database: Update referral
 Database-->>ReferralRepository: Success

@@ -1,87 +1,67 @@
-# Reunify - Alumni Networking Platform
+# Reunify 
 
+> **Bridging the Alumni-Student Gap with Architectural Design & Clean Code.**
 
-Reunify is a modern, full-stack alumni networking platform built with Next.js, TypeScript, and MongoDB. It connects current students with alumni for mentorship, job referrals, and community engagement.
+Reunify is a modern, high-fidelity networking ecosystem built for university networks. It implements **Domain-Driven Design (DDD)** and a custom **Bauhaus-inspired design system** to provide a premium experience for mentorship, job referrals, and community engagement.
 
-## Features
+---
 
-- **User Authentication**: Secure login and registration for both students and alumni.
-- **Dashboard**: Personalized dashboards for students and alumni.
-- **Job Board**: Alumni can post job opportunities, and students can apply.
-- **Referral System**: Streamlined referral process with status tracking.
-- **Community Forum**: Discussion boards for sharing insights and asking questions.
-- **Clean Architecture**: Implements Domain-Driven Design (DDD) principles with separate layers for Domain, Application, Infrastructure, and Presentation.
+###  Live Production Links
+- **Frontend App**: [https://reunify-plum.vercel.app/](https://reunify-plum.vercel.app/)
+- **Backend API**: [https://reunify-eycx.onrender.com/api](https://reunify-eycx.onrender.com/api)
+- **Health Status**: [https://reunify-eycx.onrender.com/api/health](https://reunify-eycx.onrender.com/api/health)
 
-## Tech Stack
+---
 
-- **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS
-- **Backend**: Node.js, Express.js, TypeScript
-- **Database**: MongoDB (via Prisma)
-- **ORM**: Prisma
-- **Authentication**: JWT (JSON Web Tokens)
+###  Core Pillars
+- **Geometric Bauhaus UI**: A custom design system following high-contrast, bold-border aesthetics (Red, Blue, Yellow).
+- **Clean Architecture**: Orchestrated via Domain Entities, Services, and Repositories for maximum scalability.
+- **Direct Referrals**: Students skip the ATS through verified alumni-driven job boards.
+- **Mentorship Hub**: Professional 1-on-1 mentorship request flow with real-time status tracking.
 
-## Project Structure
+---
 
+###  Tech Stack
+| Layer | Technology |
+|---|---|
+| **Frontend** | Next.js 15 (App Router), TypeScript, Vanilla CSS |
+| **Backend** | Node.js, Express, TypeScript |
+| **Database** | MongoDB Cloud (Atlas) |
+| **ORM** | Prisma |
+| **Auth** | JWT (JSON Web Tokens) with Role-Based Access Control |
+
+---
+
+###  Repository Structure
 ```
 reunify/
-├── backend/          # Node.js/Express Backend
+├── backend/          # RESTful API with DDD Pattern
 │   ├── src/
-│   │   ├── domain/     # Business logic and entities
-│   │   ├── application/  # Use cases and services
-│   │   ├── infrastructure/ # Database, auth, middleware
-│   │   └── presentation/ # Controllers and routes
-│   ├── prisma/         # Prisma schema and migrations
-│   └── package.json
-├── frontend/         # Next.js Frontend
-│   ├── app/          # Next.js App Router pages
-│   ├── components/   # Reusable React components
-│   ├── lib/          # Utilities and API clients
-│   └── package.json
-└── package.json      # Root package manager
+│   │   ├── domain/     # Logic-pure Entities (User, Job, Referral)
+│   │   ├── services/   # Business processes & Application logic
+│   │   ├── controllers/# Express entry points
+│   │   └── data/       # Prisma Repository implementations
+├── frontend/         # Bauhaus Next.js Application
+│   ├── src/
+│   │   ├── app/        # Bauhaus Layouts & Interactive Pages
+│   │   ├── lib/        # API Orchestration
+│   │   └── types/      # Global Type definitions
+└── *.md              # Mermaid Documentation & Blueprints
 ```
 
-## Prerequisites
+---
 
-- Node.js (v18 or higher)
-- MongoDB (local or cloud instance)
-- npm or yarn
+###  Documentation & Blueprints
+Explore the architectural diagrams inside the repository root:
+- [Entity-Relationship Diagram](./ErDiagram.md)
+- [Class Hierarchy](./classDiagram.md)
+- [Sequence Workflows](./sequenceDiagram.md)
+- [User Case Flow](./useCaseDiagram.md)
 
-## Installation
+---
 
-### 1. Backend Setup
+###  Getting Started Locally
 
-```bash
-cd backend
-npm install
-
-# Generate Prisma client
-npx prisma generate
-
-# Start the server
-npm run dev
-```
-
-The backend will start on `http://localhost:8080`.
-
-### 2. Frontend Setup
-
-```bash
-cd frontend
-npm install
-
-# Start the development server
-npm run dev
-```
-
-The frontend will start on `http://localhost:3000`.
-
-## Usage
-
-1. Open [http://localhost:3000](http://localhost:3000) in your browser.
-2. Register as a student or alumni.
-3. Log in to access your dashboard.
-4. Explore features like job boards, referrals, and community posts.
-
-## License
-
-ISC
+1. **Clone the Repo**
+2. **Backend**: `cd backend && npm install && npx prisma generate && npm run dev`
+3. **Frontend**: `cd frontend && npm install && npm run dev`
