@@ -23,6 +23,21 @@ export class ReferralService {
         return await this.referralRepository.save(referral);
     }
 
+    /** Student fills in the multi-step context form */
+    async enrichReferral(referralId: string, data: {
+        whyThisRole?: string;
+        relevantSkills?: string[];
+        expectedSalary?: string;
+        applicationTimeline?: string;
+        studentQuestions?: string;
+    }): Promise<Referral> {
+        const referral = await this.referralRepository.findById(referralId);
+        if (!referral) throw new Error('Referral not found');
+
+        referral.enrich(data);
+        return await this.referralRepository.update(referral.getId(), referral) as Referral;
+    }
+
     async approveReferral(referralId: string): Promise<Referral> {
         const referral = await this.referralRepository.findById(referralId);
         if (!referral) throw new Error('Referral not found');
@@ -30,23 +45,55 @@ export class ReferralService {
         referral.approve();
         await this.referralRepository.update(referral.getId(), referral);
 
-        // Update application status
         const app = await this.applicationRepository.findById(referral.getApplicationId());
         if (app) {
-            app.updateStatus('Reviewing'); // Or any logic
+            app.updateStatus('Reviewing');
             await this.applicationRepository.update(app.getId(), app);
         }
 
         return referral;
     }
 
-    async rejectReferral(referralId: string): Promise<Referral> {
+    async declineReferral(referralId: string, reason: string): Promise<Referral> {
         const referral = await this.referralRepository.findById(referralId);
         if (!referral) throw new Error('Referral not found');
 
+        referral.decline(reason);
+        return await this.referralRepository.update(referral.getId(), referral) as Referral;
+    }
+
+    async requestChanges(referralId: string, message: string): Promise<Referral> {
+        const referral = await this.referralRepository.findById(referralId);
+        if (!referral) throw new Error('Referral not found');
+
+        referral.requestChanges(message);
+        return await this.referralRepository.update(referral.getId(), referral) as Referral;
+    }
+
+    async updateStudentStatus(referralId: string, status: string): Promise<Referral> {
+        const referral = await this.referralRepository.findById(referralId);
+        if (!referral) throw new Error('Referral not found');
+
+        if (status === 'Interview Scheduled') referral.scheduleInterview();
+        else if (status === 'Offer Received') referral.markOfferReceived();
+        else if (status === 'Withdrawn') referral.withdraw();
+        else if (status === 'Referral Submitted') referral.markSubmittedToCompany();
+        else throw new Error(`Status "${status}" cannot be set via this endpoint`);
+
+        return await this.referralRepository.update(referral.getId(), referral) as Referral;
+    }
+
+    async markUnderReview(referralId: string): Promise<Referral> {
+        const referral = await this.referralRepository.findById(referralId);
+        if (!referral) throw new Error('Referral not found');
+        referral.setUnderReview();
+        return await this.referralRepository.update(referral.getId(), referral) as Referral;
+    }
+
+    async rejectReferral(referralId: string): Promise<Referral> {
+        const referral = await this.referralRepository.findById(referralId);
+        if (!referral) throw new Error('Referral not found');
         referral.reject();
-        await this.referralRepository.update(referral.getId(), referral);
-        
-        return referral;
+        return await this.referralRepository.update(referral.getId(), referral) as Referral;
     }
 }

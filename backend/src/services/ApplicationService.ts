@@ -34,7 +34,7 @@ export class ApplicationService {
         return await this.applicationRepository.findByJobId(jobId);
     }
 
-    async getApplicationsForAlumni(alumniId: string): Promise<any[]> {
+    async getApplicationsForAlumni(alumniId: string): Promise<Application[]> {
         return await this.applicationRepository.findByAlumniId(alumniId);
     }
 }
