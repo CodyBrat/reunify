@@ -24,8 +24,10 @@ The scope includes:
 - Secure authentication and authorization  
 - Profile management for students and alumni  
 - Job posting and management  
+- Job posting and management  
 - Referral request workflow  
 - Application tracking system  
+- Mentorship & Office Hours scheduling
 - Admin moderation features  
 
 The project focuses on building a clean backend architecture using proper software engineering principles such as separation of concerns, modular design, and object-oriented programming.
@@ -53,6 +55,12 @@ The project focuses on building a clean backend architecture using proper softwa
 - Alumni can review applications
 - Referral status tracking (Requested → Under Review → Referred → Rejected)
 
+### Mentorship & Office Hours
+- Alumni can set their weekly availability (Office Hours)
+- Students can browse available mentors and book 1-on-1 sessions
+- Collaborative session hub for notes and action items
+- Automatic session status tracking and feedback system
+
 ### Admin Panel
 - Verify alumni accounts
 - Remove inappropriate job posts
@@ -65,8 +73,8 @@ Since backend carries higher weightage, the system will emphasize:
 
 - Clean architecture (controllers, services, repositories)
 - Proper database design and relationships
-- Implementation of OOP principles
-- Structured referral lifecycle management
+- Implementation of OOP principles (Abstraction, Encapsulation, Polymorphism)
+- Structured referral and mentorship lifecycle management
 - Data validation and error handling
 - Modular code organization with regular commits
 

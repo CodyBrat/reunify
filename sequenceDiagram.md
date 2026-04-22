@@ -74,3 +74,30 @@ ReferralService-->>ApplicationController: Approval success
 deactivate ReferralService
 ApplicationController-->>Frontend: Referral approved
 deactivate ApplicationController
+
+%% --- Mentorship Booking Flow ---
+
+Student->>Frontend: Select "Book Session"
+Frontend->>MentorshipController: POST /mentorships/sessions
+activate MentorshipController
+MentorshipController->>MentorshipSessionService: createSession(studentId, alumniId, slotId)
+activate MentorshipSessionService
+
+MentorshipSessionService->>Database: Validate slot availability
+Database-->>MentorshipSessionService: Slot status
+
+MentorshipSessionService->>MentorshipSessionRepository: Save Session (status = SCHEDULED)
+activate MentorshipSessionRepository
+MentorshipSessionRepository->>Database: Insert MentorshipSession
+Database-->>MentorshipSessionRepository: Success
+deactivate MentorshipSessionRepository
+
+MentorshipSessionService->>NotificationService: notifyAlumni(alumniId, "New Session Booked")
+activate NotificationService
+NotificationService->>Database: Save Notification
+deactivate NotificationService
+
+MentorshipSessionService-->>MentorshipController: Session created
+deactivate MentorshipSessionService
+MentorshipController-->>Frontend: Redirect to Session Hub
+deactivate MentorshipController

@@ -20,6 +20,9 @@ subgraph Reunify_System [Reunify System]
     UC6((Apply for Job))
     UC7((Request Referral))
     UC8((Track Application Status))
+    UC21((Book Mentorship Session))
+    UC22((Join Live Session))
+    UC23((Submit Session Feedback))
     UC9((Logout))
 
     %% Alumni Use Cases
@@ -30,6 +33,9 @@ subgraph Reunify_System [Reunify System]
     UC14((Review Referral Request))
     UC15((Approve Referral))
     UC16((Reject Referral))
+    UC24((Set Office Hours))
+    UC25((Manage Session Notes))
+    UC26((Host Live Session))
 
     %% Admin Use Cases
     UC17((Verify Alumni Account))
@@ -48,6 +54,9 @@ Student --> UC5
 Student --> UC6
 Student --> UC7
 Student --> UC8
+Student --> UC21
+Student --> UC22
+Student --> UC23
 Student --> UC9
 
 %% Alumni Associations
@@ -61,6 +70,9 @@ Alumni --> UC13
 Alumni --> UC14
 Alumni --> UC15
 Alumni --> UC16
+Alumni --> UC24
+Alumni --> UC25
+Alumni --> UC26
 Alumni --> UC9
 
 %% Admin Associations
@@ -75,3 +87,4 @@ Admin --> UC9
 UC6 -->|includes| UC7
 UC14 -->|extends| UC15
 UC14 -->|extends| UC16
+UC21 -->|includes| UC24

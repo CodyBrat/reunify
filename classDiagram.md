@@ -70,7 +70,30 @@ Student "1" --> "0..*" Application : submits
 Job "1" --> "0..*" Application : receives
 Application "1" --> "1" Referral : generates
 Alumni "1" --> "0..*" Job : posts
+Alumni "1" --> "0..*" OfficeHours : configures
+Student "1" --> "0..*" MentorshipSession : books
+Alumni "1" --> "0..*" MentorshipSession : hosts
 
+%% ========================
+%% Mentorship Domain
+%% ========================
+
+class OfficeHours {
+    +String id
+    +String alumniId
+    +String timezone
+    +Boolean enabled
+    +List weeklySchedule
+}
+
+class MentorshipSession {
+    +String id
+    +String studentId
+    +String alumniId
+    +Date scheduledAt
+    +String status
+    +String meetingLink
+}
 
 %% ========================
 %% Service Layer
@@ -91,9 +114,17 @@ class ReferralService {
     +rejectReferral()
 }
 
+class MentorshipSessionService {
+    +setAvailability()
+    +bookSession()
+    +completeSession()
+}
+
 ApplicationService --> Application
 ApplicationService --> Job
 ReferralService --> Referral
+MentorshipSessionService --> MentorshipSession
+MentorshipSessionService --> OfficeHours
 
 
 %% ========================
@@ -120,7 +151,19 @@ class ReferralRepository {
     +update()
 }
 
+class MentorshipSessionRepository {
+    +save()
+    +findByUser()
+}
+
+class OfficeHoursRepository {
+    +save()
+    +findByAlumniId()
+}
+
 AuthService --> UserRepository
 ApplicationService --> ApplicationRepository
 ApplicationService --> JobRepository
 ReferralService --> ReferralRepository
+MentorshipSessionService --> MentorshipSessionRepository
+MentorshipSessionService --> OfficeHoursRepository

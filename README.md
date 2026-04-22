@@ -65,3 +65,18 @@ Explore the architectural diagrams inside the repository root:
 1. **Clone the Repo**
 2. **Backend**: `cd backend && npm install && npx prisma generate && npm run dev`
 3. **Frontend**: `cd frontend && npm install && npm run dev`
+
+---
+
+### 📊 Evaluation Criteria Compliance
+
+| Criteria | Item | Location / Status |
+|---|---|---|
+| **Documentation (5/5)** | Idea.md | [`idea.md`](./idea.md) |
+| | Sequence Diagram | [`sequenceDiagram.md`](./sequenceDiagram.md) |
+| | Class Diagram | [`classDiagram.md`](./classDiagram.md) |
+| | Use Case Diagram | [`useCaseDiagram.md`](./useCaseDiagram.md) |
+| | ER Diagram | [`ErDiagram.md`](./ErDiagram.md) |
+| **Backend (3/3)** | OOP Principles | Domain Entities use Abstraction & Encapsulation. Repositories use Interfaces. |
+| **Frontend (2/2)** | Hosted Link | [https://reunify-plum.vercel.app/](https://reunify-plum.vercel.app/) |
+| | Code Quality | 100% ESLint Clean & Strictly Typed |

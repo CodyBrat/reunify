@@ -55,6 +55,23 @@ erDiagram
         datetime decision_date
     }
 
+    OFFICE_HOURS {
+        string id PK
+        string alumni_id FK
+        string timezone
+        boolean enabled
+        json weekly_schedule
+    }
+
+    MENTORSHIP_SESSIONS {
+        string id PK
+        string student_id FK
+        string alumni_id FK
+        datetime scheduled_at
+        string status
+        string meeting_link
+    }
+
     %% Relationships
 
     USERS ||--|| STUDENT_PROFILES : has
@@ -66,3 +83,7 @@ erDiagram
 
     APPLICATIONS ||--|| REFERRALS : generates
     ALUMNI_PROFILES ||--o{ REFERRALS : reviews
+
+    ALUMNI_PROFILES ||--|| OFFICE_HOURS : configures
+    STUDENT_PROFILES ||--o{ MENTORSHIP_SESSIONS : books
+    ALUMNI_PROFILES ||--o{ MENTORSHIP_SESSIONS : hosts
