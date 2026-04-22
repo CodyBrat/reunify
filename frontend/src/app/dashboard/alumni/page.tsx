@@ -306,7 +306,10 @@ export default function AlumniDashboard() {
             </button>
             {showNotifications && (
               <div className="glass-card shadow-bauhaus-lg" style={{ position: 'absolute', top: '120%', right: 0, width: '350px', zIndex: 110, padding: '1.5rem' }}>
-                <h4 className="label-caps" style={{ marginBottom: '1.5rem', color: 'black' }}>Recent Activity</h4>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                  <h4 className="label-caps" style={{ color: 'black', margin: 0 }}>Recent Activity</h4>
+                  <button onClick={() => setShowNotifications(false)} style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', fontWeight: 900 }}>✕</button>
+                </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   {notifications.map(n => (
                     <div key={n.id} style={{ padding: '1rem', border: '2px solid black', background: n.isRead ? '#fafafa' : 'var(--primary-red)', color: n.isRead ? 'black' : 'white' }}>
@@ -474,7 +477,8 @@ export default function AlumniDashboard() {
       {/* New Job Modal */}
       {showModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div className="glass-card shadow-bauhaus-lg" style={{ width: '100%', maxWidth: '600px', padding: '4rem', background: 'white' }}>
+          <div className="glass-card shadow-bauhaus-lg" style={{ width: '100%', maxWidth: '600px', padding: '4rem', background: 'white', position: 'relative' }}>
+            <button onClick={() => setShowModal(false)} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', fontWeight: 900 }}>✕</button>
             <h2 className="heading-display" style={{ fontSize: '3rem', marginBottom: '3rem' }}>CREATE NEW REFERRAL</h2>
             <form onSubmit={createJob} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               <div>

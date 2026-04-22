@@ -140,6 +140,15 @@ export class MentorshipController {
         } catch (error: any) { res.status(400).json({ error: error.message }); }
     }
 
+    public updateSessionStatus = async (req: Request, res: Response) => {
+        try {
+            const sessionId = req.params.sessionId as string;
+            const { status } = req.body;
+            const session = await this.sessionService.updateSessionStatus(sessionId, status);
+            res.json(session);
+        } catch (error: any) { res.status(400).json({ error: error.message }); }
+    }
+
     // NOTIFICATIONS
     public getNotifications = async (req: Request, res: Response) => {
         try {
