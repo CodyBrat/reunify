@@ -60,6 +60,7 @@ export function createApp(
     app.get('/api/mentorships/student/:studentId',      mentorshipController.getStudentSessions);
     app.get('/api/mentorships/alumni/:alumniId',        mentorshipController.getAlumniSessions);
     app.get('/api/mentorships/sessions/:sessionId',     mentorshipController.getSessionDetails);
+    app.patch('/api/mentorships/sessions/:sessionId/status', mentorshipController.updateSessionStatus);
     app.patch('/api/mentorships/sessions/:sessionId/link', mentorshipController.updateMeetingLink);
     app.post('/api/mentorships/sessions/:sessionId/feedback', mentorshipController.submitFeedback);
 
