@@ -436,154 +436,215 @@ export default function StudentDashboard() {
   );
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
-
-      {/* Header */}
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4rem' }}>
+    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem' }}>
+      
+      {/* ── TOP NAVIGATION ── */}
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4rem', borderBottom: '6px solid black', paddingBottom: '1.5rem' }}>
         <div>
-          <h1 className="heading-display" style={{ fontSize: '3rem' }}>Student Workspace</h1>
-          <p style={{ color: 'var(--text-muted)' }}>Explore referrals · Track your journey.</p>
+          <h1 className="heading-display" style={{ fontSize: '3rem', lineHeight: 1 }}>STUDENT DASHBOARD</h1>
+          <p className="label-caps" style={{ color: 'var(--primary-blue)', fontWeight: 900 }}>WELCOME BACK, CANDIDATE</p>
         </div>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        
+        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+          {/* Activity indicators */}
+          <div style={{ display: 'flex', gap: '0.8rem', marginRight: '2rem' }}>
+            {notifications.slice(0, 3).map((n, i) => (
+              <div key={n.id} 
+                onClick={() => setShowNotifications(true)}
+                style={{ 
+                  width: '56px', height: '56px', borderRadius: '50%', 
+                  border: n.isRead ? '2px solid #ccc' : '4px solid var(--primary-red)', 
+                  padding: '3px', cursor: 'pointer', transition: 'transform 0.2s'
+                }}>
+                <div style={{ 
+                  width: '100%', height: '100%', borderRadius: '50%', 
+                  background: i === 0 ? 'var(--primary-blue)' : i === 1 ? 'var(--primary-yellow)' : 'var(--primary-red)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, color: 'white', fontSize: '0.8rem', border: '2px solid black'
+                }}>
+                  {n.title.charAt(0)}
+                </div>
+              </div>
+            ))}
+          </div>
+
           <div style={{ position: 'relative' }}>
-            <button 
-              onClick={() => setShowNotifications(!showNotifications)}
-              style={{ background: 'none', border: '3px solid black', padding: '0.5rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            >
-              🔔 {notifications.filter(n => !n.isRead).length > 0 && <span style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'var(--primary-red)', width: '15px', height: '15px', borderRadius: '50%', color: 'white', fontSize: '10px', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{notifications.filter(n => !n.isRead).length}</span>}
+            <button onClick={() => setShowNotifications(!showNotifications)} className="btn btn-outline" style={{ border: '3px solid black' }}>
+              🔔 {notifications.filter(n => !n.isRead).length}
             </button>
             {showNotifications && (
-              <div className="glass-card" style={{ position: 'absolute', top: '100%', right: 0, width: '300px', zIndex: 100, marginTop: '0.5rem', padding: '1rem', maxHeight: '400px', overflowY: 'auto' }}>
-                <h4 className="label-caps" style={{ marginBottom: '1rem' }}>Updates</h4>
-                {notifications.length === 0 ? <p style={{ fontSize: '0.8rem', color: '#888' }}>No new notifications</p> : 
-                  notifications.map(n => (
-                    <div key={n.id} style={{ padding: '0.5rem', borderBottom: '1px solid #eee', marginBottom: '0.5rem' }}>
-                      <p style={{ fontWeight: 900, fontSize: '0.8rem' }}>{n.title}</p>
-                      <p style={{ fontSize: '0.75rem', color: '#555' }}>{n.message}</p>
+              <div className="glass-card shadow-bauhaus-lg" style={{ position: 'absolute', top: '120%', right: 0, width: '350px', zIndex: 110, padding: '1.5rem' }}>
+                <h4 className="label-caps" style={{ marginBottom: '1.5rem', color: 'black' }}>Notifications</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {notifications.map(n => (
+                    <div key={n.id} style={{ padding: '1rem', border: '2px solid black', background: n.isRead ? '#fafafa' : 'var(--primary-yellow)', boxShadow: n.isRead ? 'none' : '4px 4px 0 black' }}>
+                      <p style={{ fontWeight: 900, fontSize: '0.85rem' }}>{n.title.toUpperCase()}</p>
+                      <p style={{ fontSize: '0.75rem', lineHeight: 1.3 }}>{n.message}</p>
                     </div>
-                  ))
-                }
+                  ))}
+                </div>
               </div>
             )}
           </div>
-          <button onClick={() => router.push('/mentorship')} className="btn btn-outline" style={{ border: '3px solid black' }}>🎓 Mentorship</button>
-          <button onClick={() => { localStorage.clear(); router.push('/'); }} className="btn btn-outline" style={{ border: '3px solid black' }}>Logout</button>
+          <button onClick={() => router.push('/mentorship')} className="btn btn-outline" style={{ border: '3px solid black', background: 'var(--primary-yellow)' }}>🎓 MENTORS</button>
+          <button onClick={() => { localStorage.clear(); router.push('/'); }} className="btn btn-outline" style={{ border: '3px solid black' }}>✕ LOGOUT</button>
         </div>
       </header>
 
-      {/* Tabs */}
-      <div style={{ display: 'flex', gap: '2rem', marginBottom: '3rem', borderBottom: '4px solid black' }}>
-        {(['discover', 'applications'] as const).map(tab => (
-          <button key={tab} onClick={() => setActiveTab(tab)}
-            style={{ padding: '1.5rem 1rem', background: 'none', border: 'none', color: activeTab === tab ? 'black' : '#888', borderBottom: activeTab === tab ? '8px solid var(--primary-blue)' : 'none', cursor: 'pointer', fontWeight: 900, textTransform: 'uppercase' }}>
-            {tab === 'discover' ? 'Discover Jobs' : `My Applications (${applications.length})`}
-          </button>
-        ))}
-      </div>
-
-      {/* ── DISCOVER ── */}
-      {activeTab === 'discover' && (
-        <>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-            <h2 className="heading-section">Available Referrals</h2>
-            <button onClick={loadData} className="btn btn-outline" style={{ border: '2px solid black', fontSize: '0.7rem' }}>REFRESH FEED</button>
-          </div>
-          {jobs.length === 0 ? (
-            <div className="glass-card" style={{ textAlign: 'center', padding: '6rem' }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔭</div>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem' }}>No open job referrals right now.</p>
+      <div style={{ display: 'grid', gridTemplateColumns: '350px 1fr', gap: '4rem', alignItems: 'flex-start' }}>
+        
+        {/* ── LEFT SIDEBAR ── */}
+        <aside style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem', position: 'sticky', top: '2rem' }}>
+          
+          <div style={{ border: '4px solid black', background: 'white', boxShadow: '12px 12px 0 black', padding: '2.5rem' }}>
+            <div style={{ 
+              width: '120px', height: '120px', background: 'var(--primary-blue)', 
+              border: '4px solid black', marginBottom: '2rem', transform: 'rotate(-3deg)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', 
+              fontSize: '4rem', fontWeight: 900, color: 'white'
+            }}>
+              S
             </div>
-          ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '2.5rem' }}>
+            <h2 style={{ fontSize: '2rem', fontWeight: 900, textTransform: 'uppercase', lineHeight: 1, marginBottom: '0.5rem' }}>Student Profile</h2>
+            <p className="label-caps" style={{ marginBottom: '2rem' }}>Engineering Major / Senior</p>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', borderTop: '3px solid black', paddingTop: '1.5rem' }}>
+              <div>
+                <p style={{ fontSize: '1.5rem', fontWeight: 900 }}>{applications.length}</p>
+                <p className="label-caps" style={{ fontSize: '0.6rem' }}>Requests</p>
+              </div>
+              <div>
+                <p style={{ fontSize: '1.5rem', fontWeight: 900 }}>{applications.filter(a => a.referral?.status === 'Approved').length}</p>
+                <p className="label-caps" style={{ fontSize: '0.6rem' }}>Success</p>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ padding: '1.5rem', border: '4px solid black', background: 'var(--primary-yellow)' }}>
+             <h4 className="label-caps" style={{ marginBottom: '1rem', color: 'black' }}>Activity Feed</h4>
+             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {applications.slice(0, 4).map(app => (
+                  <div key={app.id} style={{ padding: '0.75rem', background: 'white', border: '2px solid black', fontSize: '0.8rem' }}>
+                    <span style={{ fontWeight: 900 }}>{app.job?.title.toUpperCase()}</span>
+                    <p style={{ fontSize: '0.7rem', color: '#666' }}>Status updated to {app.referral?.status || 'Pending'}</p>
+                  </div>
+                ))}
+             </div>
+          </div>
+        </aside>
+
+        {/* ── MAIN CONTENT AREA ── */}
+        <main>
+          {/* Tabs */}
+          <div style={{ display: 'flex', gap: '3rem', marginBottom: '4rem' }}>
+            {(['discover', 'applications'] as const).map(tab => (
+              <button key={tab} onClick={() => setActiveTab(tab)}
+                style={{ 
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  padding: '1rem 0',
+                  borderBottom: activeTab === tab ? '10px solid black' : 'none',
+                  opacity: activeTab === tab ? 1 : 0.4,
+                  fontSize: '2.5rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '-0.05em'
+                }}>
+                {tab === 'discover' ? 'Discover Jobs' : 'My Applications'}
+              </button>
+            ))}
+          </div>
+
+          {/* ── DISCOVER ── */}
+          {activeTab === 'discover' && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', gap: '3rem' }}>
               {jobs.map(job => {
                 const applied = applications.some(a => a.jobId === job.id);
                 return (
-                  <div key={job.id} className="glass-card">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                      <h3 style={{ fontSize: '1.4rem', fontWeight: 900, textTransform: 'uppercase' }}>{job.title}</h3>
-                      <span style={{ background: 'var(--primary-yellow)', color: 'black', padding: '4px 10px', border: '2px solid black', fontSize: '0.65rem', fontWeight: 900 }}>VERIFIED</span>
+                  <article key={job.id} className="hover-lift" style={{ border: '4px solid black', background: 'white', padding: '2.5rem', boxShadow: '8px 8px 0 black' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
+                      <h3 style={{ fontSize: '1.8rem', fontWeight: 900, textTransform: 'uppercase', lineHeight: 1 }}>{job.title}</h3>
+                      <div style={{ width: '15px', height: '15px', background: 'var(--primary-blue)', border: '2px solid black' }}></div>
                     </div>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '2rem', minHeight: '60px' }}>{job.description}</p>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '2px solid black', paddingTop: '1.25rem' }}>
+                    <p style={{ fontSize: '1.1rem', lineHeight: 1.4, marginBottom: '3rem', color: '#444' }}>{job.description}</p>
+                    
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderTop: '3px solid black', paddingTop: '1.5rem' }}>
                       <div>
-                        <p style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#888' }}>Close Date</p>
-                        <p style={{ fontWeight: 900, fontSize: '0.9rem' }}>{new Date(job.deadline).toLocaleDateString()}</p>
+                        <p className="label-caps" style={{ marginBottom: '0.3rem' }}>Application Deadline</p>
+                        <p style={{ fontWeight: 900, fontSize: '1.1rem' }}>{new Date(job.deadline).toLocaleDateString().toUpperCase()}</p>
                       </div>
                       {applied ? (
                         <button onClick={() => { const app = applications.find(a => a.jobId === job.id); if (app) setTimelineApp(app); }}
-                          style={{ padding: '0.75rem 1.25rem', border: '3px solid black', background: '#f0f0f0', fontWeight: 900, cursor: 'pointer', fontSize: '0.8rem' }}>
-                          VIEW STATUS →
+                          className="btn btn-outline" style={{ background: 'var(--primary-yellow)' }}>
+                          VIEW STATUS
                         </button>
                       ) : (
-                        <button onClick={() => applyForJob(job.id)} className="btn btn-primary" style={{ padding: '0.75rem 1.5rem' }}>
-                          REQUEST REFERRAL
+                        <button onClick={() => applyForJob(job.id)} className="btn btn-primary" style={{ padding: '1rem 2rem' }}>
+                          APPLY NOW →
                         </button>
                       )}
                     </div>
-                  </div>
+                  </article>
                 );
               })}
             </div>
           )}
-        </>
-      )}
 
-      {/* ── MY APPLICATIONS ── */}
-      {activeTab === 'applications' && (
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
-            <h2 className="heading-section">My Referral Requests</h2>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              {allStatuses.map(s => (
-                <button key={s} onClick={() => setStatusFilter(s)}
-                  style={{ padding: '0.4rem 0.9rem', border: '2px solid black', background: statusFilter === s ? 'black' : 'white', color: statusFilter === s ? 'white' : 'black', cursor: 'pointer', fontWeight: 700, fontSize: '0.75rem' }}>
-                  {s}
-                </button>
-              ))}
-            </div>
-          </div>
+          {/* ── MY APPLICATIONS ── */}
+          {activeTab === 'applications' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+              <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+                {allStatuses.map(s => (
+                  <button key={s} onClick={() => setStatusFilter(s)}
+                    style={{ 
+                      padding: '0.8rem 1.5rem', border: '3px solid black', 
+                      background: statusFilter === s ? 'black' : 'white', 
+                      color: statusFilter === s ? 'white' : 'black', 
+                      cursor: 'pointer', fontWeight: 900, fontSize: '0.8rem',
+                      boxShadow: statusFilter === s ? 'none' : '4px 4px 0 black',
+                      transform: statusFilter === s ? 'translate(2px, 2px)' : 'none'
+                    }}>
+                    {s.toUpperCase()}
+                  </button>
+                ))}
+              </div>
 
-          {filteredApps.length === 0 ? (
-            <div className="glass-card" style={{ textAlign: 'center', padding: '6rem' }}>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>No applications match this filter.</p>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               {filteredApps.map(app => {
                 const ref = app.referral;
                 const st  = ref?.status || 'Pending';
                 return (
-                  <div key={app.id} className="glass-card" style={{ padding: '1.75rem 2.5rem', cursor: 'pointer' }}
-                    onClick={() => setTimelineApp(app)}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                      <div>
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '0.25rem' }}>{app.job?.title}</h3>
-                        <p style={{ fontSize: '0.85rem', color: '#888' }}>
-                          Applied <span style={{ fontWeight: 700, color: 'black' }}>{new Date(app.appliedAt).toLocaleDateString()}</span>
-                        </p>
-                        {ref?.changesRequested && (
-                          <p style={{ fontSize: '0.8rem', color: '#ea580c', fontWeight: 700, marginTop: '0.3rem' }}>⚠ Alumni requested changes</p>
-                        )}
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-                        <span style={{ background: STATUS_BG[st] || '#f0f0f0', color: STATUS_COLOR[st] || 'black', padding: '6px 14px', border: `2px solid ${STATUS_COLOR[st] || 'black'}`, fontWeight: 900, fontSize: '0.8rem', textTransform: 'uppercase' }}>
-                          {STATUS_ICON[st]} {st}
-                        </span>
-                        {ref && ['Changes Requested', 'Pending'].includes(st) && (
-                          <button onClick={e => { e.stopPropagation(); openReferralModal(app); }} className="btn btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.75rem' }}>
-                            {st === 'Changes Requested' ? 'UPDATE' : 'ENRICH'}
-                          </button>
-                        )}
-                        <span style={{ color: '#888', fontSize: '1rem' }}>→</span>
-                      </div>
+                  <article key={app.id} 
+                    onClick={() => setTimelineApp(app)}
+                    style={{ 
+                      border: '4px solid black', background: 'white', padding: '2rem 3rem', 
+                      boxShadow: '10px 10px 0 black', cursor: 'pointer',
+                      display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                    }}>
+                    <div>
+                      <h3 style={{ fontSize: '1.8rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '0.5rem' }}>{app.job?.title}</h3>
+                      <p className="label-caps">Applied On: {new Date(app.appliedAt).toLocaleDateString().toUpperCase()}</p>
+                      {ref?.changesRequested && (
+                        <p style={{ color: 'var(--primary-red)', fontWeight: 900, fontSize: '0.8rem', marginTop: '0.5rem' }}>⚠ CHANGES REQUIRED</p>
+                      )}
                     </div>
-                  </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
+                      <div style={{ textAlign: 'right' }}>
+                         <p className="label-caps" style={{ marginBottom: '0.3rem' }}>Application Status</p>
+                         <span style={{ 
+                           background: STATUS_BG[st], border: '3px solid black', 
+                           padding: '0.5rem 1.5rem', fontWeight: 900, fontSize: '0.9rem' 
+                         }}>
+                           {st.toUpperCase()}
+                         </span>
+                      </div>
+                      {ref && ['Changes Requested', 'Pending'].includes(st) && (
+                        <button onClick={e => { e.stopPropagation(); openReferralModal(app); }} className="btn btn-primary">
+                          EDIT DETAILS
+                        </button>
+                      )}
+                    </div>
+                  </article>
                 );
               })}
             </div>
           )}
-        </div>
-      )}
+        </main>
+      </div>
 
       {/* Modals */}
       {modalJob && modalReferralId && (

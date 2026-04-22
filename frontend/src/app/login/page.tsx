@@ -38,53 +38,68 @@ export default function Login() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-      <div className="glass-card animate-fade-in" style={{ width: '100%', maxWidth: '450px', padding: '3.5rem' }}>
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <h1 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>Login</h1>
-          <p style={{ color: 'var(--text-muted)' }}>Access your professional network.</p>
-        </div>
+    <div className="bauhaus-grid" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+      
+      {/* Decorative background shapes */}
+      <div className="bauhaus-shape" style={{ top: '10%', left: '5%', width: '150px', height: '150px', background: 'var(--primary-red)', transform: 'rotate(15deg)' }} />
+      <div className="bauhaus-shape" style={{ bottom: '15%', right: '10%', width: '120px', height: '120px', background: 'var(--primary-blue)', borderRadius: '50%' }} />
 
-        {error && (
-          <div style={{ background: 'rgba(255, 71, 71, 0.1)', color: '#ff4747', padding: '1rem', borderRadius: '12px', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center', border: '1px solid rgba(255, 71, 71, 0.2)' }}>
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-            <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginLeft: '0.5rem' }}>Enterprise Email</label>
-            <input 
-              type="email" 
-              className="btn btn-outline" 
-              style={{ width: '100%', textAlign: 'left', padding: '1rem' }}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="name@university.edu"
-              required 
-            />
-          </div>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-            <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginLeft: '0.5rem' }}>Password</label>
-            <input 
-              type="password" 
-              className="btn btn-outline" 
-              style={{ width: '100%', textAlign: 'left', padding: '1rem' }}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required 
-            />
+      <div style={{ position: 'relative', width: '100%', maxWidth: '500px' }}>
+        {/* Architectural Accent Line */}
+        <div className="bauhaus-line" style={{ position: 'absolute', top: '-10px', left: '-20px', width: '60px' }} />
+        
+        <div style={{ border: '6px solid black', background: 'white', boxShadow: '20px 20px 0 black', padding: '4rem' }}>
+          <div style={{ marginBottom: '4rem' }}>
+            <h1 className="heading-display" style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>LOGIN</h1>
+            <p className="label-caps" style={{ color: 'var(--primary-blue)', fontWeight: 900 }}>WELCOME BACK TO REUNIFY</p>
           </div>
 
-          <button type="submit" className="btn btn-primary" style={{ marginTop: '1rem', padding: '1rem' }} disabled={loading}>
-            {loading ? 'Authenticating...' : 'Sign In'}
-          </button>
-        </form>
+          {error && (
+            <div style={{ border: '3px solid black', background: 'var(--primary-red)', color: 'white', padding: '1rem', marginBottom: '2.5rem', fontWeight: 900, fontSize: '0.8rem' }}>
+              ⚠ ERROR: {error.toUpperCase()}
+            </div>
+          )}
 
-        <div style={{ marginTop: '2.5rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-          New to Reunify? <Link href="/register" style={{ color: 'var(--accent)', fontWeight: 600, textDecoration: 'none' }}>Create an account</Link>
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+            <div>
+              <label className="label-caps" style={{ color: 'black', marginBottom: '0.8rem', display: 'block' }}>Email Address</label>
+              <input 
+                type="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="user@university.edu"
+                required 
+                style={{ border: '3px solid black', padding: '1.2rem', fontWeight: 700 }}
+              />
+            </div>
+            
+            <div>
+              <label className="label-caps" style={{ color: 'black', marginBottom: '0.8rem', display: 'block' }}>Password</label>
+              <input 
+                type="password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required 
+                style={{ border: '3px solid black', padding: '1.2rem', fontWeight: 700 }}
+              />
+            </div>
+
+            <button type="submit" className="btn btn-primary" style={{ padding: '1.5rem', fontSize: '1rem' }} disabled={loading}>
+              {loading ? 'LOGGING IN...' : 'LOGIN →'}
+            </button>
+          </form>
+
+          <div style={{ marginTop: '3.5rem', borderTop: '3px solid black', paddingTop: '2rem', textAlign: 'center' }}>
+            <p className="label-caps" style={{ marginBottom: '1rem' }}>No Account Detected?</p>
+            <Link href="/register" style={{ 
+              display: 'block', padding: '1rem', border: '3px solid black', 
+              color: 'black', fontWeight: 900, textDecoration: 'none', 
+              background: 'var(--primary-yellow)', boxShadow: '6px 6px 0 black' 
+            }}>
+              REGISTER NOW
+            </Link>
+          </div>
         </div>
       </div>
     </div>
