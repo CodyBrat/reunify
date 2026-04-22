@@ -473,7 +473,10 @@ export default function StudentDashboard() {
             </button>
             {showNotifications && (
               <div className="glass-card shadow-bauhaus-lg" style={{ position: 'absolute', top: '120%', right: 0, width: '350px', zIndex: 110, padding: '1.5rem' }}>
-                <h4 className="label-caps" style={{ marginBottom: '1.5rem', color: 'black' }}>Notifications</h4>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                  <h4 className="label-caps" style={{ color: 'black', margin: 0 }}>Notifications</h4>
+                  <button onClick={() => setShowNotifications(false)} style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', fontWeight: 900 }}>✕</button>
+                </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   {notifications.map(n => (
                     <div key={n.id} style={{ padding: '1rem', border: '2px solid black', background: n.isRead ? '#fafafa' : 'var(--primary-yellow)', boxShadow: n.isRead ? 'none' : '4px 4px 0 black' }}>

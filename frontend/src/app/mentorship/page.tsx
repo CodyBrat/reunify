@@ -49,21 +49,20 @@ export default function MentorshipPage() {
   const past = sessions.filter(s => s.status === 'COMPLETED' || (s.status === 'SCHEDULED' && new Date(s.scheduledAt) <= new Date()));
 
   return (
-  return (
     <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem' }}>
       
       {/* ── TOP NAVIGATION ── */}
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '4rem', borderBottom: '6px solid black', paddingBottom: '1.5rem' }}>
         <div>
-          <h1 className="heading-display" style={{ fontSize: '3rem', lineHeight: 1 }}>MENTORSHIP_HUB_</h1>
-          <p className="label-caps" style={{ color: 'var(--primary-blue)', fontWeight: 900 }}>GUIDANCE_PROTOCOL_V2</p>
+          <h1 className="heading-display" style={{ fontSize: '3rem', lineHeight: 1 }}>Mentorship Hub</h1>
+          <p className="label-caps" style={{ color: 'var(--primary-blue)', fontWeight: 900 }}>Guidance & Support</p>
         </div>
         
         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
           <button onClick={() => router.back()} className="btn btn-outline" style={{ border: '3px solid black' }}>✕ CLOSE</button>
           {role === 'Student' && (
             <button onClick={() => router.push('/mentorship/book')} className="btn btn-primary" style={{ padding: '1rem 2rem', background: 'var(--primary-red)', border: '3px solid black' }}>
-              + BOOK_SESSION
+              + Book Session
             </button>
           )}
         </div>
@@ -84,18 +83,18 @@ export default function MentorshipPage() {
             }}>
               M
             </div>
-            <h2 style={{ fontSize: '1.8rem', fontWeight: 900, textTransform: 'uppercase', lineHeight: 1, marginBottom: '0.5rem' }}>Identity_Link</h2>
-            <p className="label-caps" style={{ marginBottom: '2rem' }}>Status: {role?.toUpperCase() || 'UNKNOWN'}</p>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 900, textTransform: 'uppercase', lineHeight: 1, marginBottom: '0.5rem' }}>Your Profile</h2>
+            <p className="label-caps" style={{ marginBottom: '2rem' }}>Role: {role || 'Unknown'}</p>
             
             {role === 'Alumni' && (
               <div style={{ borderTop: '3px solid black', paddingTop: '1.5rem' }}>
                  <p className="label-caps" style={{ marginBottom: '1rem', color: availabilityEnabled ? 'var(--primary-blue)' : 'var(--primary-red)' }}>
-                    {availabilityEnabled ? 'PROTOCOL_LIVE' : 'PROTOCOL_HIDDEN'}
+                    {availabilityEnabled ? 'Accepting Sessions' : 'Not Accepting Sessions'}
                  </p>
                  <button 
                   onClick={() => router.push('/dashboard/alumni/mentorship-settings')}
                   className="btn btn-outline" style={{ width: '100%', fontSize: '0.75rem' }}>
-                   CONFIG_OFFICE_HOURS
+                   Configure Office Hours
                  </button>
               </div>
             )}
@@ -103,14 +102,14 @@ export default function MentorshipPage() {
 
           {/* Impact Stats Sidebar */}
           <div style={{ padding: '1.5rem', border: '4px solid black', background: 'var(--primary-yellow)' }}>
-             <h4 className="label-caps" style={{ marginBottom: '1rem', color: 'black' }}>Network_Pulse</h4>
+             <h4 className="label-caps" style={{ marginBottom: '1rem', color: 'black' }}>Your Stats</h4>
              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid black', paddingBottom: '0.5rem' }}>
-                   <span style={{ fontSize: '0.8rem', fontWeight: 900 }}>SESSIONS_TOTAL</span>
+                   <span style={{ fontSize: '0.8rem', fontWeight: 900 }}>Total Sessions</span>
                    <span style={{ fontWeight: 900 }}>{sessions.length}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid black', paddingBottom: '0.5rem' }}>
-                   <span style={{ fontSize: '0.8rem', fontWeight: 900 }}>UPCOMING</span>
+                   <span style={{ fontSize: '0.8rem', fontWeight: 900 }}>Upcoming</span>
                    <span style={{ fontWeight: 900 }}>{upcoming.length}</span>
                 </div>
              </div>
@@ -121,11 +120,11 @@ export default function MentorshipPage() {
         <main>
           {/* Active Sessions Feed */}
           <section style={{ marginBottom: '5rem' }}>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '3rem', letterSpacing: '-0.05em' }}>Scheduled_Events</h2>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '3rem', letterSpacing: '-0.05em' }}>Upcoming Sessions</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
               {upcoming.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '6rem', border: '4px dashed #ccc' }}>
-                   <p className="label-caps" style={{ color: '#888' }}>No frequency detected. Book a session to initialize.</p>
+                   <p className="label-caps" style={{ color: '#888' }}>No upcoming sessions found. Book a session to get started.</p>
                 </div>
               ) : (
                 upcoming.map(session => (
@@ -159,7 +158,7 @@ export default function MentorshipPage() {
                        <button 
                         onClick={() => router.push(`/mentorship/session/${session.id}`)}
                         className="btn btn-primary" style={{ width: '100%', fontSize: '0.8rem' }}>
-                         HUB_ACCESS →
+                         Join Session →
                        </button>
                     </div>
                   </article>
@@ -170,10 +169,10 @@ export default function MentorshipPage() {
 
           {/* History Feed */}
           <section>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '3rem', letterSpacing: '-0.05em' }}>History_Log</h2>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '3rem', letterSpacing: '-0.05em' }}>Past Sessions</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               {past.length === 0 ? (
-                <p className="label-caps" style={{ color: '#888' }}>No archive detected.</p>
+                <p className="label-caps" style={{ color: '#888' }}>No past sessions found.</p>
               ) : (
                 past.map(session => (
                   <div key={session.id} style={{ 
@@ -197,7 +196,7 @@ export default function MentorshipPage() {
                     <button 
                       onClick={() => router.push(`/mentorship/session/${session.id}`)}
                       className="btn btn-outline" style={{ fontSize: '0.75rem' }}>
-                      SUMMARY_
+                      View Details
                     </button>
                   </div>
                 ))
