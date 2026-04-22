@@ -117,7 +117,7 @@ export default function Home() {
           <div style={{ order: 1 }}>
             <h2 className="heading-display" style={{ fontSize: '4.5rem', marginBottom: '2.5rem' }}>DIRECT REFERRALS_</h2>
             <p style={{ fontSize: '1.4rem', lineHeight: '1.4', marginBottom: '3rem' }}>
-              Bypass the black hole of automated application systems. Get referred by alumni working at the world's most innovative organizations.
+              Bypass the black hole of automated application systems. Get referred by alumni working at the worlds most innovative organizations.
             </p>
             <Link href="/login" className="btn btn-outline" style={{ padding: '1.2rem 3rem' }}>START REQUEST →</Link>
           </div>
