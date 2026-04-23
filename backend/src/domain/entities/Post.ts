@@ -7,6 +7,7 @@ export class Post {
     private createdAt: Date;
     private likes: number;
     private likedBy: string[];
+    private comments: any[];
 
     constructor(
         id: string,
@@ -16,7 +17,8 @@ export class Post {
         createdAt: Date = new Date(),
         likes: number = 0,
         likedBy: string[] = [],
-        authorName?: string
+        authorName?: string,
+        comments: any[] = []
     ) {
         this.id = id;
         this.authorId = authorId;
@@ -26,6 +28,7 @@ export class Post {
         this.createdAt = createdAt;
         this.likes = likes;
         this.likedBy = likedBy;
+        this.comments = comments;
     }
 
     public getId(): string { return this.id; }
@@ -36,6 +39,11 @@ export class Post {
     public getCreatedAt(): Date { return this.createdAt; }
     public getLikes(): number { return this.likes; }
     public getLikedBy(): string[] { return this.likedBy; }
+    public getComments(): any[] { return this.comments; }
+
+    public addComment(comment: any): void {
+        this.comments.push(comment);
+    }
 
     public toggleLike(userId: string): void {
         const index = this.likedBy.indexOf(userId);

@@ -14,10 +14,11 @@ Reunify is a modern, high-fidelity networking ecosystem built for university net
 ---
 
 ###  Core Pillars
-- **Geometric Bauhaus UI**: A custom design system following high-contrast, bold-border aesthetics (Red, Blue, Yellow).
+- **Geometric Bauhaus UI**: A custom design system following high-contrast, bold-border aesthetics combined with clear, professional SaaS typography and UX elements.
 - **Clean Architecture**: Orchestrated via Domain Entities, Services, and Repositories for maximum scalability.
 - **Direct Referrals**: Students skip the ATS through verified alumni-driven job boards.
-- **Mentorship Hub**: Professional 1-on-1 mentorship request flow with real-time status tracking.
+- **Mentorship Hub**: Professional 1-on-1 mentorship request flow with real-time status tracking and seamless session finalization.
+- **Community Feed**: An interactive, dynamic discussion board allowing users to broadcast updates and engage in threaded, real-time replies.
 
 ---
 

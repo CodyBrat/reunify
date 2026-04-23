@@ -12,6 +12,10 @@ export default function PostsPage() {
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(true);
   const [posting, setPosting] = useState(false);
+  const [expandedPostId, setExpandedPostId] = useState<string | null>(null);
+  const [commentText, setCommentText] = useState('');
+  const [commenting, setCommenting] = useState(false);
+
   const [currentUserId] = useState<string | null>(() => {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
@@ -86,36 +90,57 @@ export default function PostsPage() {
     }
   };
 
+  const handleComment = async (e: React.FormEvent, postId: string) => {
+    e.preventDefault();
+    if (!commentText.trim()) return;
+    setCommenting(true);
+    try {
+      const token = localStorage.getItem('token') || '';
+      const payload = JSON.parse(atob(token.split('.')[1])) as { userId: string };
+      const authorId = payload.userId;
+      const authorName = localStorage.getItem('userName') || 'Anonymous';
+
+      await api.post(`/posts/${postId}/comment`, { authorId, authorName, content: commentText }, token);
+      setCommentText('');
+      await loadPosts();
+    } catch (err: unknown) {
+      const error = err as Error;
+      alert(error.message || 'Failed to post reply');
+    } finally {
+      setCommenting(false);
+    }
+  };
+
   if (loading) return <div style={{ color: 'white', textAlign: 'center', padding: '10rem' }}>Opening Discussions...</div>;
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
       <header style={{ marginBottom: '4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: '6px solid black', paddingBottom: '1.5rem' }}>
         <div>
-          <h1 className="heading-display" style={{ fontSize: '3.5rem', lineHeight: '0.9', marginBottom: '0.5rem' }}>DISCOURSE</h1>
-          <p className="label-caps" style={{ color: 'var(--primary-blue)', fontWeight: 900 }}>REUNIFY COMMUNITY FEED_V2</p>
+          <h1 className="heading-display" style={{ fontSize: '3.5rem', lineHeight: '0.9', marginBottom: '0.5rem' }}>Community</h1>
+          <p className="label-caps" style={{ color: 'var(--primary-blue)', fontWeight: 900 }}>Discussion & Updates</p>
         </div>
-        <button onClick={() => router.back()} className="btn btn-outline" style={{ border: '3px solid black', height: 'fit-content' }}>✕ CLOSE</button>
+        <button onClick={() => router.back()} className="btn btn-outline" style={{ border: '3px solid black', height: 'fit-content' }}>✕ Close</button>
       </header>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem' }}>
         
         {/* Create Post Section - Bauhaus Style */}
         <div style={{ border: '4px solid black', background: 'var(--primary-yellow)', padding: '2rem', boxShadow: '8px 8px 0 black' }}>
-          <h3 className="label-caps" style={{ marginBottom: '1.5rem', fontSize: '1.1rem' }}>Broadcast an update_</h3>
+          <h3 className="label-caps" style={{ marginBottom: '1.5rem', fontSize: '1.1rem', textTransform: 'none' }}>Create a New Post</h3>
           <form onSubmit={handlePost} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <input 
-              type="text" placeholder="SUBJECT LINE" required 
-              style={{ width: '100%', padding: '1rem', border: '3px solid black', fontWeight: 900, textTransform: 'uppercase', outline: 'none' }}
+              type="text" placeholder="Subject" required 
+              style={{ width: '100%', padding: '1rem', border: '3px solid black', fontWeight: 900, outline: 'none' }}
               value={title} onChange={e => setTitle(e.target.value)}
             />
             <textarea 
-              placeholder="SHARE INSIGHTS, ASK QUESTIONS, OR POST UPDATES..." required 
+              placeholder="Share insights, ask questions, or post updates..." required 
               style={{ width: '100%', padding: '1rem', minHeight: '120px', border: '3px solid black', fontWeight: 700, resize: 'none', outline: 'none', fontFamily: 'inherit' }}
               value={content} onChange={e => setContent(e.target.value)}
             />
             <button type="submit" className="btn btn-primary" disabled={posting} style={{ width: '100%', background: 'black', color: 'white', border: 'none', padding: '1.2rem', fontSize: '1rem' }}>
-              {posting ? 'TRANSMITTING...' : 'PUBLISH TO NETWORK →'}
+              {posting ? 'Publishing...' : 'Publish Post →'}
             </button>
           </form>
         </div>
@@ -124,7 +149,7 @@ export default function PostsPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '3.5rem' }}>
           {posts.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '8rem 2rem', border: '4px dashed #ccc' }}>
-               <p className="label-caps" style={{ color: '#888' }}>No frequency detected. Start the transmission.</p>
+               <p className="label-caps" style={{ color: '#888', textTransform: 'none' }}>No posts yet. Start the conversation!</p>
             </div>
           ) : (
             posts.map((post: Post) => (
@@ -155,7 +180,7 @@ export default function PostsPage() {
 
                 {/* Content Area */}
                 <div style={{ padding: '2.5rem 1.5rem', background: 'white' }}>
-                  <h2 style={{ fontSize: '1.8rem', fontWeight: 900, marginBottom: '1.2rem', textTransform: 'uppercase', lineHeight: '1.1' }}>{post.title}</h2>
+                  <h2 style={{ fontSize: '1.8rem', fontWeight: 900, marginBottom: '1.2rem', lineHeight: '1.1' }}>{post.title}</h2>
                   <p style={{ fontSize: '1.1rem', lineHeight: '1.6', fontWeight: 500, color: '#333', whiteSpace: 'pre-line' }}>{post.content}</p>
                 </div>
 
@@ -184,14 +209,17 @@ export default function PostsPage() {
                       }}
                     >
                       <span>{currentUserId && post.likedBy?.includes(currentUserId) ? '♥' : '♡'}</span>
-                      <span>{post.likes} LIKES</span>
+                      <span>{post.likes} Likes</span>
                     </button>
 
-                    <button style={{ 
-                      background: 'white', border: '3px solid black', padding: '0.6rem 1.2rem', 
-                      fontWeight: 900, fontSize: '0.9rem', cursor: 'pointer', boxShadow: '4px 4px 0 black'
+                    <button 
+                      onClick={() => setExpandedPostId(expandedPostId === post.id ? null : post.id)}
+                      style={{ 
+                      background: expandedPostId === post.id ? '#f0f0f0' : 'white', border: '3px solid black', padding: '0.6rem 1.2rem', 
+                      fontWeight: 900, fontSize: '0.9rem', cursor: 'pointer', boxShadow: expandedPostId === post.id ? 'none' : '4px 4px 0 black',
+                      transform: expandedPostId === post.id ? 'translate(2px, 2px)' : 'none'
                     }}>
-                      💬 DISCUSS
+                      💬 {post.comments?.length || 0} Replies
                     </button>
                   </div>
                   
@@ -201,6 +229,36 @@ export default function PostsPage() {
                     <div style={{ width: '10px', height: '3px', background: 'black' }} />
                   </button>
                 </div>
+
+                {/* Comments Section */}
+                {expandedPostId === post.id && (
+                  <div style={{ padding: '2rem 1.5rem', background: '#f8f8f8', borderTop: '3px solid black' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '2rem' }}>
+                      {(post.comments || []).map(c => (
+                        <div key={c.id} style={{ padding: '1rem', border: '2px solid black', background: 'white' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <span style={{ fontWeight: 900, fontSize: '0.85rem', textTransform: 'uppercase' }}>{c.authorName || 'USER'}</span>
+                            <span style={{ fontSize: '0.7rem', color: '#888' }}>{new Date(c.createdAt).toLocaleDateString()}</span>
+                          </div>
+                          <p style={{ fontSize: '0.95rem', lineHeight: '1.4' }}>{c.content}</p>
+                        </div>
+                      ))}
+                      {(!post.comments || post.comments.length === 0) && (
+                        <p style={{ fontSize: '0.85rem', color: '#666', fontStyle: 'italic' }}>No replies yet. Start the conversation!</p>
+                      )}
+                    </div>
+                    <form onSubmit={(e) => handleComment(e, post.id)} style={{ display: 'flex', gap: '1rem' }}>
+                      <input 
+                        type="text" required placeholder="Write a reply..."
+                        value={commentText} onChange={e => setCommentText(e.target.value)}
+                        style={{ flex: 1, padding: '0.8rem', border: '3px solid black', outline: 'none', fontWeight: 700 }}
+                      />
+                      <button type="submit" disabled={commenting} style={{ background: 'black', color: 'white', border: 'none', padding: '0 1.5rem', fontWeight: 900, cursor: 'pointer' }}>
+                        {commenting ? '...' : 'SEND'}
+                      </button>
+                    </form>
+                  </div>
+                )}
               </article>
             ))
           )}

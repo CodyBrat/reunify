@@ -50,6 +50,7 @@ export function createApp(
     app.post('/api/posts', postController.createPost);
     app.get('/api/posts', postController.getPosts);
     app.put('/api/posts/:postId/like', postController.likePost);
+    app.post('/api/posts/:postId/comment', postController.commentPost);
 
     // Mentorship & Office Hours
     app.get('/api/mentorships/mentors',              mentorshipController.getAllMentors); // This will need updating in controller if kept

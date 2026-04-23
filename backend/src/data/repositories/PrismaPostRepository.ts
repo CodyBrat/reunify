@@ -8,14 +8,14 @@ export class PrismaPostRepository implements IPostRepository {
             where: { id },
             include: { author: { select: { name: true } } }
         });
-        return data ? new Post(data.id, data.authorId, data.title, data.content, data.createdAt, data.likes, data.likedBy, data.author?.name) : null;
+        return data ? new Post(data.id, data.authorId, data.title, data.content, data.createdAt, data.likes, data.likedBy, data.author?.name, (data.comments as any[]) || []) : null;
     }
 
     async findAll(): Promise<Post[]> {
         const data = await prisma.post.findMany({
             include: { author: { select: { name: true } } }
         });
-        return data.map(d => new Post(d.id, d.authorId, d.title, d.content, d.createdAt, d.likes, d.likedBy, d.author?.name));
+        return data.map(d => new Post(d.id, d.authorId, d.title, d.content, d.createdAt, d.likes, d.likedBy, d.author?.name, (d.comments as any[]) || []));
     }
 
     async findAllOrderedByDate(): Promise<Post[]> {
@@ -23,7 +23,7 @@ export class PrismaPostRepository implements IPostRepository {
             orderBy: { createdAt: 'desc' },
             include: { author: { select: { name: true } } }
         });
-        return data.map(d => new Post(d.id, d.authorId, d.title, d.content, d.createdAt, d.likes, d.likedBy, d.author?.name));
+        return data.map(d => new Post(d.id, d.authorId, d.title, d.content, d.createdAt, d.likes, d.likedBy, d.author?.name, (d.comments as any[]) || []));
     }
 
     async findByAuthorId(authorId: string): Promise<Post[]> {
@@ -31,7 +31,7 @@ export class PrismaPostRepository implements IPostRepository {
             where: { authorId },
             include: { author: { select: { name: true } } }
         });
-        return data.map(d => new Post(d.id, d.authorId, d.title, d.content, d.createdAt, d.likes, d.likedBy, d.author?.name));
+        return data.map(d => new Post(d.id, d.authorId, d.title, d.content, d.createdAt, d.likes, d.likedBy, d.author?.name, (d.comments as any[]) || []));
     }
 
     async save(entity: Post): Promise<Post> {
@@ -47,9 +47,9 @@ export class PrismaPostRepository implements IPostRepository {
         if (existing) {
             const data = await prisma.post.update({
                 where: { id },
-                data: { likes: entity.getLikes(), likedBy: entity.getLikedBy(), title: entity.getTitle(), content: entity.getContent() }
+                data: { likes: entity.getLikes(), likedBy: entity.getLikedBy(), title: entity.getTitle(), content: entity.getContent(), comments: entity.getComments() }
             });
-            return new Post(data.id, data.authorId, data.title, data.content, data.createdAt, data.likes, data.likedBy);
+            return new Post(data.id, data.authorId, data.title, data.content, data.createdAt, data.likes, data.likedBy, undefined, (data.comments as any[]) || []);
         } else {
             const data = await prisma.post.create({
                 data: {
@@ -57,12 +57,13 @@ export class PrismaPostRepository implements IPostRepository {
                     content: entity.getContent(),
                     likes: entity.getLikes(),
                     createdAt: entity.getCreatedAt(),
+                    comments: entity.getComments(),
                     author: {
                         connect: { id: entity.getAuthorId() }
                     }
                 }
             });
-            return new Post(data.id, data.authorId, data.title, data.content, data.createdAt, data.likes, data.likedBy);
+            return new Post(data.id, data.authorId, data.title, data.content, data.createdAt, data.likes, data.likedBy, undefined, (data.comments as any[]) || []);
         }
     }
 

@@ -321,6 +321,7 @@ export default function AlumniDashboard() {
               </div>
             )}
           </div>
+          <button onClick={() => router.push('/posts')} className="btn btn-outline" style={{ border: '3px solid black', background: 'var(--primary-blue)', color: 'white' }}>💬 DISCUSS</button>
           <button onClick={() => { localStorage.clear(); router.push('/'); }} className="btn btn-outline" style={{ border: '3px solid black' }}>✕ LOGOUT</button>
         </div>
       </header>

@@ -489,6 +489,7 @@ export default function StudentDashboard() {
             )}
           </div>
           <button onClick={() => router.push('/mentorship')} className="btn btn-outline" style={{ border: '3px solid black', background: 'var(--primary-yellow)' }}>🎓 MENTORS</button>
+          <button onClick={() => router.push('/posts')} className="btn btn-outline" style={{ border: '3px solid black', background: 'var(--primary-blue)', color: 'white' }}>💬 DISCUSS</button>
           <button onClick={() => { localStorage.clear(); router.push('/'); }} className="btn btn-outline" style={{ border: '3px solid black' }}>✕ LOGOUT</button>
         </div>
       </header>

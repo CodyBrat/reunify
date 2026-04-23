@@ -76,6 +76,14 @@ export interface Application {
   };
 }
 
+export interface Comment {
+  id: string;
+  authorId: string;
+  authorName: string;
+  content: string;
+  createdAt: string;
+}
+
 export interface Post {
   id: string;
   authorId: string;
@@ -84,6 +92,7 @@ export interface Post {
   content: string;
   likes: number;
   likedBy: string[];
+  comments?: Comment[];
   createdAt: string;
 }
 

@@ -24,4 +24,20 @@ export class PostService {
         post.toggleLike(userId);
         return await this.postRepository.save(post);
     }
+
+    async commentPost(postId: string, authorId: string, authorName: string, content: string): Promise<Post> {
+        const post = await this.postRepository.findById(postId);
+        if (!post) throw new Error('Post not found');
+        
+        const comment = {
+            id: uuidv4(),
+            authorId,
+            authorName,
+            content,
+            createdAt: new Date()
+        };
+        
+        post.addComment(comment);
+        return await this.postRepository.save(post);
+    }
 }

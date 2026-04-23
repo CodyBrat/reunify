@@ -103,6 +103,7 @@ model Post {
   content         String
   likes           Int          @default(0)
   likedBy         String[]     @default([])
+  comments        Json?        // Array of { id, authorId, authorName, content, createdAt }
   createdAt       DateTime     @default(now())
   
   authorId        String       @db.ObjectId
